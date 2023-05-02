@@ -29,8 +29,6 @@ class ClientTest(unittest.TestCase):
     ]
     for quote in quotes:
       self.assertEqual(getDataPoint(quote),(quote['stock'],quote['top_bid']['price'],quote['top_ask']['price'],(quote['top_bid']['price']+quote['top_ask']['price'])/2))
-      print(getDataPoint(quote))
-      print((quote['stock'],quote['top_bid']['price'],quote['top_ask']['price'],(quote['top_bid']['price']+quote['top_ask']['price'])/2))
 
 
 if __name__ == '__main__':
