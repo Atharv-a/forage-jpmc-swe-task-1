@@ -1,0 +1,166 @@
+From f98031237c708ee9b67ab0e6058af8b7740a9e52 Mon Sep 17 00:00:00 2001
+From: Atharva Singh <atharva9arvin@gmail.com>
+Date: Tue, 2 May 2023 20:35:15 +0530
+Subject: [PATCH 1/4]  Updated getdatapint and getratio
+
+---
+ client3.py | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/client3.py b/client3.py
+index 3fc09b7..9bfe857 100644
+--- a/client3.py
++++ b/client3.py
+@@ -35,14 +35,17 @@ def getDataPoint(quote):
+     stock = quote['stock']
+     bid_price = float(quote['top_bid']['price'])
+     ask_price = float(quote['top_ask']['price'])
+-    price = bid_price
++    price = (bid_price+ask_price)/2
+     return stock, bid_price, ask_price, price
+ 
+ 
+ def getRatio(price_a, price_b):
+     """ Get ratio of price_a and price_b """
+     """ ------------- Update this function ------------- """
+-    return 1
++    if price_b==0:
++        return 
++    
++    return price_a/price_b
+ 
+ 
+ # Main
+-- 
+2.34.1
+
+
+From 8c1034f4cd918ad67da4835c1e49c4d349962edf Mon Sep 17 00:00:00 2001
+From: Atharva Singh <atharva9arvin@gmail.com>
+Date: Tue, 2 May 2023 20:41:49 +0530
+Subject: [PATCH 2/4]  main method updated
+
+---
+ client3.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/client3.py b/client3.py
+index 9bfe857..4d1d21e 100644
+--- a/client3.py
++++ b/client3.py
+@@ -55,8 +55,10 @@ if __name__ == "__main__":
+         quotes = json.loads(urllib.request.urlopen(QUERY.format(random.random())).read())
+ 
+         """ ----------- Update to get the ratio --------------- """
++        prices ={}
+         for quote in quotes:
+             stock, bid_price, ask_price, price = getDataPoint(quote)
++            prices[stock] =price
+             print("Quoted %s at (bid:%s, ask:%s, price:%s)" % (stock, bid_price, ask_price, price))
+ 
+-        print("Ratio %s" % getRatio(price, price))
++        print("Ratio %s" % getRatio(prices['ABC'], prices['DEF']))
+-- 
+2.34.1
+
+
+From 86cf6ebea8234e20f64f83a4aa4c81f6fbd651e4 Mon Sep 17 00:00:00 2001
+From: Atharva Singh <atharva9arvin@gmail.com>
+Date: Tue, 2 May 2023 22:11:09 +0530
+Subject: [PATCH 3/4] Add test cases
+
+---
+ __pycache__/client3.cpython-310.pyc | Bin 0 -> 1121 bytes
+ client_test.py                      |  14 +++++++++++++-
+ 2 files changed, 13 insertions(+), 1 deletion(-)
+ create mode 100644 __pycache__/client3.cpython-310.pyc
+
+diff --git a/__pycache__/client3.cpython-310.pyc b/__pycache__/client3.cpython-310.pyc
+new file mode 100644
+index 0000000000000000000000000000000000000000..992383c6670a51559bd509356864df3fc3a97cec
+GIT binary patch
+literal 1121
+zcmYjR&2Aev5GJ`?X(daE<2Z7J^uPv4QWbTSAcv+#+O&z&-i$a#4_&m_(&ETkd$lW*
+zREntbNqvF7fqd)(^d0&Py!MoPPCa!<*+#hF{E)N5kKfF0)owQlj=vx5t3Mlr{Og^M
+z2d<HCahiWnD57XV(v_wu4L(aF#Zs=KG*(>2e~`4MYO0R94v9)mnEn+S(1dtF7j&2W
+z@;qGwvTQ+g++JP-zPt`}NzchSJ*UfcuhSb1l9O};ZeaB7^d{8c=7Rpr)6Mi&+DW%y
+z3pQZ$8G+lX0h@3OI<Ph59kQU5oPLF?O{l|$TI&*&tu9%xi@m#w9^efQNU!}KZ$tKG
+zpN_1Z?DYFZHIT)qGIr<bqo<Ghr&G}Hp6BZ8-_P<7l#l_=s}ZBcalXW9UZ7}@IcDvW
+zGitrXx<o~IDm`Pt=U09-XY*)_sQ3;!<8$i0IUjPwQ=5G$Uh7It2Owlo2s;8%0w_@8
+ztt_TsgssF8l%S=>2%)5vlPWK*aIvw~;KbE!HOUTh<>HCX2e9&`IeE_zVUN0aSX9#X
+zVi%uID+}5$y9U0Ht>POPyE3)E++Remq57}iA5~-MOFNSKt?UmgEstRPcrqSro8MsD
+z;#=E~`-38f(mr`OdFNV3V0RJS>wpeZm=+4g61t903m@Iag@Hf+a(LU%z-R{zWRxn3
+zol{rr06Cr0I|NyZW_QI8U<HzpSE3q<06mjJmg>Sj6x!EnFQD%+SHB3kG!DbYN_b!{
+zLA-B#zR%G!2?~#u(}d~uu%BgPnU`5Md$8|`Q{tWx(u&WJx}AIG3xNy-9S%aPH%mf3
+zjC0X<FJ8K6_tp2kuH(n1DqT$@)@tmoO?6S^hYvMiuNmuVE8oTYKfZeNlcRfqr7H-f
+z97C2lo@3=)j5&_L(agnIQ)OKJGD{t^R1?5suux-Z9oHb0tA&yqR|^=8_O}cTp#9ga
+z{SP1%J@ig#KcdL@fL`(RY>e$$z&D;=b00;rnNVaZ;!zSM&7`@`1Z51F!#XFlLqB2s
+H184sOOzRlE
+
+literal 0
+HcmV?d00001
+
+diff --git a/client_test.py b/client_test.py
+index af2bf26..2f0e713 100644
+--- a/client_test.py
++++ b/client_test.py
+@@ -8,6 +8,8 @@ class ClientTest(unittest.TestCase):
+       {'top_ask': {'price': 121.68, 'size': 4}, 'timestamp': '2019-02-11 22:06:30.572453', 'top_bid': {'price': 117.87, 'size': 81}, 'id': '0.109974697771', 'stock': 'DEF'}
+     ]
+     """ ------------ Add the assertion below ------------ """
++    for quote in quotes:
++      self.assertEqual(getDataPoint(quote),(quote['stock'],quote['top_bid']['price'],quote['top_ask']['price'],(quote['top_bid']['price']+quote['top_ask']['price'])/2))
+ 
+   def test_getDataPoint_calculatePriceBidGreaterThanAsk(self):
+     quotes = [
+@@ -15,10 +17,20 @@ class ClientTest(unittest.TestCase):
+       {'top_ask': {'price': 121.68, 'size': 4}, 'timestamp': '2019-02-11 22:06:30.572453', 'top_bid': {'price': 117.87, 'size': 81}, 'id': '0.109974697771', 'stock': 'DEF'}
+     ]
+     """ ------------ Add the assertion below ------------ """
++    for quote in quotes:
++      self.assertEqual(getDataPoint(quote),(quote['stock'],quote['top_bid']['price'],quote['top_ask']['price'],(quote['top_bid']['price']+quote['top_ask']['price'])/2))
+ 
+ 
+   """ ------------ Add more unit tests ------------ """
+-
++  def test_zero(self):
++    quotes=[
++      {'top_ask': {'price': 0, 'size': 0}, 'timestamp': '2019-02-11 22:06:30.572453', 'top_bid': {'price': 120.48, 'size': 109}, 'id': '0.109974697771', 'stock': 'ABC'},
++      {'top_ask': {'price': 121.68, 'size': 4}, 'timestamp': '2019-02-11 22:06:30.572453', 'top_bid': {'price': 0, 'size': 0}, 'id': '0.109974697771', 'stock': 'DEF'}
++    ]
++    for quote in quotes:
++      self.assertEqual(getDataPoint(quote),(quote['stock'],quote['top_bid']['price'],quote['top_ask']['price'],(quote['top_bid']['price']+quote['top_ask']['price'])/2))
++      print(getDataPoint(quote))
++      print((quote['stock'],quote['top_bid']['price'],quote['top_ask']['price'],(quote['top_bid']['price']+quote['top_ask']['price'])/2))
+ 
+ 
+ if __name__ == '__main__':
+-- 
+2.34.1
+
+
+From f43ba959122db51ef724760aed194a99fbcea97e Mon Sep 17 00:00:00 2001
+From: Atharva Singh <atharva9arvin@gmail.com>
+Date: Tue, 2 May 2023 22:14:44 +0530
+Subject: [PATCH 4/4] test case added
+
+---
+ client_test.py | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/client_test.py b/client_test.py
+index 2f0e713..2600b47 100644
+--- a/client_test.py
++++ b/client_test.py
+@@ -29,8 +29,6 @@ class ClientTest(unittest.TestCase):
+     ]
+     for quote in quotes:
+       self.assertEqual(getDataPoint(quote),(quote['stock'],quote['top_bid']['price'],quote['top_ask']['price'],(quote['top_bid']['price']+quote['top_ask']['price'])/2))
+-      print(getDataPoint(quote))
+-      print((quote['stock'],quote['top_bid']['price'],quote['top_ask']['price'],(quote['top_bid']['price']+quote['top_ask']['price'])/2))
+ 
+ 
+ if __name__ == '__main__':
+-- 
+2.34.1
+
